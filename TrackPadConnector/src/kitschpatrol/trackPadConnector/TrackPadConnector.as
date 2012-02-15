@@ -12,8 +12,12 @@ package kitschpatrol.trackPadConnector {
 	import flash.filesystem.File;
 	import flash.geom.Point;
 	
+	import org.as3commons.logging.api.ILogger;
+	import org.as3commons.logging.api.getLogger;
+	
 	public class TrackPadConnector extends EventDispatcher {
 		
+		private static const log:ILogger = getLogger(TrackPadConnector);		
 		private static var instance:TrackPadConnector;
 		private var tongsengProcess:NativeProcess;
 		public var touchPoints:Array;	
@@ -61,7 +65,7 @@ package kitschpatrol.trackPadConnector {
 			tongsengProcess.addEventListener(ProgressEvent.STANDARD_OUTPUT_DATA, onStdout);
 			tongsengProcess.addEventListener(NativeProcessExitEvent.EXIT, onNativeProcessExit)
 			
-			if (tongsengProcess.running) trace('TUIO dispatcher started\nHost: ' + host + '\nPort: ' + port + "\nDevice Index: " + deviceIndex);
+			if (tongsengProcess.running) log.info("TrackPadConnector process started on device " + deviceIndex);
 		}
 		
 		
@@ -174,13 +178,12 @@ package kitschpatrol.trackPadConnector {
 		
 		// Event Handlers		
 		private function onWindowClose(event:Event):void {
-			trace("Window closing");
 			if (tongsengProcess.running) tongsengProcess.exit(true);
 		}
 		
 		
 		private function onNativeProcessExit(event:NativeProcessExitEvent):void	{
-			trace('Process exited');
+			log.info("TrackPadConnector process exited");
 		}			
 		
 		// Utilities
